@@ -1,0 +1,26 @@
+<h1>Polinomios</h1>
+
+<input type="text" #expresion>
+<br><br>
+<button (click)="Enviar(expresion.value)">Enviar</button>
+
+<br>
+
+@if (compilado)
+{
+    @for (token of tokens; track $index)
+    {
+        {{ lexer.TokenTypeToString(token.type) }}: {{ token.lex }}
+        <br>
+    }
+
+    <br><br>
+
+    @for (variable of variables; track $index)
+    {
+        <label>Introduce el valor de la variable {{ variable }}: </label>
+        <input type="number" #valor_variable>
+        <button (click)="Guardar(valor_variable.value, variable)">Guardar</button>
+        <br>
+    }
+}
