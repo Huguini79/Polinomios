@@ -25,6 +25,7 @@ export class Lexer
 
     tokenize(code: any): any
     {
+        this.tokens = [];
         let buf = "";
         for (let i = 0; i < code.length; ++i)
         {

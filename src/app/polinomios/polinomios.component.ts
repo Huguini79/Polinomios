@@ -1,13 +1,6 @@
 import { Lexer } from '../services/lexer.service';
-import { Component, inject } from '@angular/core';
-
-enum TokenType
-{
-    Number,
-    Operation,
-    Variable,
-    Unknown,
-};
+import { Parser } from '../services/parser.service';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 
 @Component
 ({
@@ -18,53 +11,48 @@ enum TokenType
 
 export class Polinomios 
 {
+    constructor(private ref: ChangeDetectorRef) {}
     lexer = inject(Lexer);
+    parser = inject(Parser);
     compilado = false;
     tokens: any = [];
     numbers: any = [];
     variables: any = [];
     valores: any = [];
     grafo: any = [];
+    completar_2_fase = false;
+    cont = 0;
+    cont_intern = 0;
     Enviar(expresion_algebraica: any)
     {
         this.numbers = [];
         this.variables = [];
+        this.tokens = [];
         this.tokens = this.lexer.tokenize(expresion_algebraica);
-        for (let i = 0; i < this.tokens.length; ++i)
-        {
-            if (this.tokens[i].type == TokenType.Variable)
-            {
-                if (!this.buscarRepetidos(this.tokens[i].lex))
-                {
-                    this.variables.push(this.tokens[i].lex);
-                }
-            
-            } else if (this.tokens[i].type == TokenType.Number)
-            {
-                this.numbers.push(this.tokens[i].lex);
-            }
-        }
-        console.log(this.variables);
-        console.log(this.numbers);
         this.compilado = true;
+        this.parser.parse(this.tokens, this.numbers, this.grafo);
+        this.variables = this.parser.returnVariables();
+    }
+
+    inc()
+    {
+        this.cont++;
     }
 
     Guardar(valor: any, variable: string)
     {
-        this.valores.push({numero: valor, variable: variable});
-        console.log(this.valores);
-    }
-
-    buscarRepetidos(lex: string): boolean
-    {
-        for (let i = 0; i < this.variables.length; ++i)
+        this.cont_intern++;
+        if (this.cont_intern <= this.cont)
+        {    
+            this.valores.push({numero: valor, variable: variable});
+            console.log(this.valores);
+        
+        } else
         {
-            if (lex == this.variables[i].lex)
-            {
-                return true;
-            }
+            this.completar_2_fase = true;
         }
 
-        return false;
+        console.log(this.cont);
+        console.log(this.cont_intern);
     }
 }

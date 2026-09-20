@@ -18,9 +18,15 @@
 
     @for (variable of variables; track $index)
     {
+        {{ inc() }}
         <label>Introduce el valor de la variable {{ variable }}: </label>
         <input type="number" #valor_variable>
         <button (click)="Guardar(valor_variable.value, variable)">Guardar</button>
         <br>
     }
+}
+
+@if (completar_2_fase)
+{
+    <label>asdjfas</label>
 }
