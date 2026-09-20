@@ -42,10 +42,6 @@ export class Polinomios
             } else if (this.tokens[i].type == TokenType.Number)
             {
                 this.numbers.push(this.tokens[i].lex);
-                if(this.tokens[i+1].type == TokenType.Variable)
-                {
-                    this.grafo.push({});
-                }
             }
         }
         console.log(this.variables);
