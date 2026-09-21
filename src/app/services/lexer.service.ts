@@ -47,8 +47,23 @@ export class Lexer
 
                 } else if (this.c == '^')
                 {
-                    this.tokens.push({lex: this.c + code[i+1], type: TokenType.Potencia});
-                    i++;
+                    let buf_temp = "^";
+                    
+                    for (let j = i+1; j < code.length; ++j)
+                    {
+                        if (!isNaN(Number(code[j])))
+                        {
+                            buf_temp += code[j];
+                            i++;
+                        
+                        } else
+                        {
+                            break;
+                        }
+                    }
+
+                    console.log(buf_temp);
+                    this.tokens.push({lex: buf_temp, type: TokenType.Potencia});
                 }
                 
                 else
