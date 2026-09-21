@@ -24,20 +24,24 @@ export class Parser
         let j = 0;
         for (let i = 0; i < tokens.length; ++i)
         {
-                if (tokens[i].type != TokenType.Operation)
+                if (tokens[i].type != TokenType.Operation && tokens[i].lex != '')
                 {
+                    console.log(i);
                     buf += tokens[i].lex;
                 
                 }
 
                 else
                 {
-                    console.log(`Monomio identificado: ${buf}`);
-                    this.monomios.push(buf);
-                    buf = "";
-                    if (tokens[i].lex == '-')
+                    if (buf != '')
                     {
-                        buf += tokens[i].lex;
+                        console.log(`Monomio identificado: ${buf}`);
+                        this.monomios.push(buf);
+                        buf = "";
+                        if (tokens[i].lex == '-')
+                        {
+                            buf += tokens[i].lex;
+                        }
                     }
                 }
 
