@@ -17,80 +17,42 @@ export class Parser
 {
     variables: any = [];
     coincidencias: any = [];
+    monomios: any = [];
     parse(tokens: any, numbers: any, grafo: any)
     {
+        let buf = "";
+        let j = 0;
         for (let i = 0; i < tokens.length; ++i)
         {
-            let next = i + 1 < tokens.length ? true : false;
-            let nextnext = i + 2 < tokens.length ? true : false;
-            if (tokens[i].type == TokenType.Variable)
-            {
-                if (!this.buscarRepetidos(tokens[i].lex))
+                if (tokens[i].type != TokenType.Operation)
                 {
-                    this.variables.push(tokens[i].lex);
-                    if (next)
+                    buf += tokens[i].lex;
+                
+                }
+
+                else
+                {
+                    console.log(`Monomio identificado: ${buf}`);
+                    this.monomios.push(buf);
+                    buf = "";
+                    if (tokens[i].lex == '-')
                     {
-                        if (tokens[i+1].type == TokenType.Variable)
-                        {
-                            grafo.push({vertex1: tokens[i].lex, vertex1type: TokenType.Variable, vertex2: tokens[i+1].lex, vertex2type: TokenType.Variable,arista: '*'});
-                        
-                        } else if (tokens[i+1].type == TokenType.Operation)
-                        {
-                            if (tokens[i-1].type == TokenType.Operation)
-                            {
-                                grafo.push({vertex1: tokens[i].lex, vertex1type: TokenType.Variable, vertex2: tokens[i+1].lex, vertex2type: TokenType.Operation, arista: 0});
-                                
-                            } else
-                            {
-                                grafo.push({vertex1: tokens[i+1].lex, vertex1type: TokenType.Operation, vertex2: 0, vertex2type: 0, arista: 0});
-                            }
-                        }
+                        buf += tokens[i].lex;
                     }
                 }
-            
-            } else if (tokens[i].type == TokenType.Number)
-            {
-                numbers.push(tokens[i].lex);
-                if (next)
-                {
-                    if(tokens[i+1].type == TokenType.Variable)
-                    {
-                        grafo.push({vertex1: tokens[i].lex, vertex1type: TokenType.Number, vertex2: tokens[i+1].lex, vertex2type: TokenType.Variable, arista: '*'});
-                        if (nextnext)
-                        {
-                            if (tokens[i+2].type == TokenType.Operation)
-                            {
-                                grafo.push({vertex1: tokens[i+2].lex, vertex1type: TokenType.Operation, vertex2: 0, vertex2type: 0, arista: 0});
-                            }
-                            
-                        }
-                    }
-                }
-            }
+
         }
+        
+        console.log(`Monomio identificado: ${buf}`);
+        this.monomios.push(buf);
+        buf = "";
 
-        for (let i = 0; i < grafo.length; ++i)
-        {
-            let next = i + 1 < grafo.length ? true : false;
-            let nextnext = i + 2 < grafo.length ? true : false;
-                if (grafo[i].vertex1type == TokenType.Number)
-                {                    
-                   
-                        if (grafo[i].vertex2type == TokenType.Variable)
-                        {
-                            this.coincidencias.push({coeficiente: grafo[i].vertex1, parte_literal: grafo[i].vertex2});
-                        }
+        console.log(this.monomios);
+    }
 
-                } else if (grafo[i].vertex1type == TokenType.Variable)
-                {
-                    this.coincidencias.push({parte_literal: grafo[i].vertex1});
-                }
-        }
-
-        console.log(this.variables);
-        console.log(this.coincidencias);
-        console.log(numbers);
-        console.log(grafo);
+    returnMonomios(): any
+    {
+        return this.monomios;
     }
 
     returnVariables(): any

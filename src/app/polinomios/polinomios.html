@@ -1,5 +1,9 @@
 <h1>Polinomios</h1>
 
+<p>Nota: Para elevar números, tienes que poner este signo: ^</p>
+<p>Ej: a elevado al cuadrado -> a^2</p>
+<p>Ej: b elevado al cubo -> a^3</p>
+
 <input type="text" #expresion>
 <br><br>
 <button (click)="Enviar(expresion.value)">Enviar</button>
@@ -23,6 +27,15 @@
         <input type="number" #valor_variable>
         <button (click)="Guardar(valor_variable.value, variable)">Guardar</button>
         <br>
+    }
+
+    @if (monomios_listos)
+    {
+        @for (monomio of monomios; track $index)
+        {
+            <label>Monomios identificados: {{ monomio }}</label>
+            <br>
+        }
     }
 }
 

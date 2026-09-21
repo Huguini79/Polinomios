@@ -18,8 +18,10 @@ export class Polinomios
     tokens: any = [];
     numbers: any = [];
     variables: any = [];
+    monomios: any = [];
     valores: any = [];
     grafo: any = [];
+    monomios_listos = false;
     completar_2_fase = false;
     cont = 0;
     cont_intern = 0;
@@ -32,6 +34,8 @@ export class Polinomios
         this.compilado = true;
         this.parser.parse(this.tokens, this.numbers, this.grafo);
         this.variables = this.parser.returnVariables();
+        this.monomios = this.parser.returnMonomios();
+        this.monomios_listos = true;
     }
 
     inc()

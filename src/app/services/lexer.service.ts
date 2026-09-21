@@ -11,6 +11,7 @@ enum TokenType
     Number,
     Operation,
     Variable,
+    Potencia,
     Unknown,
 };
 
@@ -44,7 +45,13 @@ export class Lexer
                     this.tokens.push({lex: this.c, type: TokenType.Operation});
                     buf = "";
 
-                } else
+                } else if (this.c == '^')
+                {
+                    this.tokens.push({lex: this.c + code[i+1], type: TokenType.Potencia});
+                    i++;
+                }
+                
+                else
                 {
                     if (buf != "")
                         this.tokens.push({lex: buf, type: TokenType.Number});
@@ -69,6 +76,7 @@ export class Lexer
             case TokenType.Number: return "Número"; break;
             case TokenType.Variable: return "Variable"; break;
             case TokenType.Operation: return "Operación"; break;
+            case TokenType.Potencia: return "Potencia"; break;
             default: return "Desconocido"; break;
         }
     }
