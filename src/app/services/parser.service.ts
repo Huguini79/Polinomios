@@ -46,12 +46,21 @@ export class Parser
                 }
 
         }
+
+        for (let i = 0; i < tokens.length; ++i)
+        {
+            if (tokens[i].type == TokenType.Variable)
+            {
+                if (!this.buscarRepetidos(tokens[i].lex))
+                {
+                    this.variables.push(tokens[i].lex);
+                }
+            }
+        }
         
         console.log(`Monomio identificado: ${buf}`);
         this.monomios.push(buf);
         buf = "";
-
-        console.log(this.monomios);
     }
 
     returnMonomios(): any

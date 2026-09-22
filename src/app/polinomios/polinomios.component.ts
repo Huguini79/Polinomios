@@ -28,6 +28,9 @@ export class Polinomios
     variables: any = [];
     monomios: any = [];
     valores: any = [];
+    resultados: any = [];
+    resultado_total = 0;
+    resultado_total_listo = false;
     grafo: any = [];
     temp_esp: any = [];
     monomios_listos = false;
@@ -98,7 +101,7 @@ export class Polinomios
             buf_temp = "";
         }
 
-        console.log(this.temp_esp);
+        this.completar_2_fase = true;
     }
 
     inc()
@@ -108,18 +111,76 @@ export class Polinomios
 
     Guardar(valor: any, variable: string)
     {
-        this.cont_intern++;
-        if (this.cont_intern <= this.cont)
-        {    
-            this.valores.push({numero: valor, variable: variable});
-            console.log(this.valores);
-        
-        } else
+        this.valores.push({numero: valor, variable: variable});
+        console.log(this.valores);
+    }
+
+    CVN()
+    {
+        /* 
+            TODO: Implementar que se calculen los números elevados al cuadrado
+        */
+        let mult = 1;
+        for (let i = 0; i < this.monomios.length; ++i)
         {
-            this.completar_2_fase = true;
+            for (let j = 0; j < this.monomios.length; ++j)
+            {
+                if (!isNaN(Number(this.monomios[i][j])))
+                {
+                    console.log(`Esto es un número: ${this.monomios[i][j]}`);
+                    mult *= Number(this.monomios[i][j]);
+                
+                } else if (this.monomios[i][j] == '^')
+                {
+                    console.log("Potencia detectada");
+                    mult = Math.pow(mult, this.monomios[i][j+1]);
+                    console.log(`Mult después de la potencia: ${mult}`);
+                    j++;
+                }
+                
+                else
+                {
+                    let jj = false;
+                    if (this.monomios[i][j] == '-')
+                    {
+                        jj = true;
+                    }
+                    console.log(`¡Ojo!, esto no es un número, se supone que es una variable: ${this.monomios[i][j]}`);
+                    for (let k = 0; k < this.valores.length; ++k)
+                    {
+                        if (this.valores[k].variable == this.monomios[i][j])
+                        {
+                            console.log(`${this.valores[k].variable} sustituido por ${this.valores[k].numero}`);
+                            mult *= Number(this.valores[k].numero);
+                            console.log(mult);
+                        }
+                    }
+
+                    if (jj)
+                    {
+                        mult *= -mult;
+                        jj = false;
+
+                    }
+                }
+            }
+
+            this.resultados.push(mult);
+            mult = 1;
         }
 
-        console.log(this.cont);
-        console.log(this.cont_intern);
+        let sum = 0;
+        for (let i = 0; i < this.resultados.length; ++i)
+        {
+            sum += this.resultados[i];
+        }
+
+        this.resultado_total = sum;
+
+        sum = 0;
+
+        this.resultado_total_listo = true;
+
+        console.log(this.resultados);
     }
 }
