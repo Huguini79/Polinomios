@@ -135,7 +135,14 @@ export class Polinomios
                     console.log("Potencia detectada");
                     mult = Math.pow(mult, this.monomios[i][j+1]);
                     console.log(`Mult después de la potencia: ${mult}`);
-                    j++;
+                    if ((j + 2) < this.tokens.length)
+                    {
+                        break;
+                    
+                    } else
+                    {
+                        j += 2;
+                    }
                 }
                 
                 else
