@@ -123,7 +123,7 @@ export class Polinomios
         let mult = 1;
         for (let i = 0; i < this.monomios.length; ++i)
         {
-            for (let j = 0; j < this.monomios.length; ++j)
+            for (let j = 0; j < this.monomios[i].length; ++j)
             {
                 if (!isNaN(Number(this.monomios[i][j])))
                 {
