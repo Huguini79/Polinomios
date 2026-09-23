@@ -2,8 +2,7 @@ import { Lexer } from '../services/lexer.service';
 import { Parser } from '../services/parser.service';
 import { Component, inject, ChangeDetectorRef } from '@angular/core';
 
-enum TokenType
-{
+enum TokenType {
     Number,
     Operation,
     Variable,
@@ -11,15 +10,14 @@ enum TokenType
 };
 
 @Component
-({
-    selector: 'app-polinomios',
-    templateUrl: 'polinomios.html',
-    styleUrl: '../app.css'
-})
+    ({
+        selector: 'app-polinomios',
+        templateUrl: 'polinomios.html',
+        styleUrl: '../app.css'
+    })
 
-export class Polinomios 
-{
-    constructor(private ref: ChangeDetectorRef) {}
+export class Polinomios {
+    constructor(private ref: ChangeDetectorRef) { }
     lexer = inject(Lexer);
     parser = inject(Parser);
     compilado = false;
@@ -37,8 +35,7 @@ export class Polinomios
     completar_2_fase = false;
     cont = 0;
     cont_intern = 0;
-    Enviar(expresion_algebraica: any)
-    {
+    Enviar(expresion_algebraica: any) {
         this.numbers = [];
         this.variables = [];
         this.tokens = [];
@@ -49,190 +46,132 @@ export class Polinomios
         this.monomios = this.parser.returnMonomios();
         this.monomios_listos = true;
 
-        let buf_temp = "";
-        for (let i = 0; i < this.monomios.length; ++i)
-        {
-            for (let j = 0; j < this.monomios[i].length; ++j)
-            {
-                let monomio_actual = this.monomios[i].charAt(j);
-                if (isNaN(Number(monomio_actual)) && monomio_actual != '+' && monomio_actual != '-' && monomio_actual)
-                {
-                    if (monomio_actual == '^')
-                    {
-                        buf_temp += '^';
-                        for (let k = j; k < this.monomios[i].length; ++k)
-                        {
-                            if (!isNaN(Number(this.monomios[i][k])))
-                            {
-                                buf_temp += this.monomios[i][k];
-
-                            } else
-                            {
-                                console.log(`He llegado: i = ${i}, j = ${j}, k = ${k}, buf = ${buf_temp}`);
-                            }
-                        }
-
-                    } else
-                    {
-                        console.log('Carácter individual: '+ monomio_actual);
-                        buf_temp += monomio_actual;
-                        console.log('Buffer: '+ buf_temp);
-                    }
-                
-                }
-                
-                else
-                {
-                    if (buf_temp != '')
-                    {
-                        console.log(`He llegado: i = ${i}, j = ${j}, buf = ${buf_temp}`);
-                        this.temp_esp.push(buf_temp);
-                        buf_temp = "";
-                    }
-                }
-
-            }
-        }
-
-        if (buf_temp != '')
-        {
-            console.log(`He llegado:, buf = ${buf_temp}`);
-            this.temp_esp.push(buf_temp);
-            buf_temp = "";
-        }
-
         this.completar_2_fase = true;
     }
 
-    inc()
-    {
+    inc() {
         this.cont++;
     }
 
-    Guardar(valor: any, variable: string)
-    {
-        this.valores.push({numero: valor, variable: variable});
+    Guardar(valor: any, variable: string) {
+        this.valores.push({ numero: valor, variable: variable });
         console.log(this.valores);
     }
 
-    CVN()
-    {
-        /* 
-            TODO: Implementar que se calculen los números elevados al cuadrado
-        */
+    CVN() {
+        console.log("TRABAJANDO EN EL VALOR NUMÉRICO........");
         let mult = 1;
-        for (let i = 0; i < this.monomios.length; ++i)
-        {
-            for (let j = 0; j < this.monomios[i].length; ++j)
-            {
-
-                for (let k = 0; k < this.monomios[i].length; ++k)
-                {
-                    if (this.monomios[i][j] == '^')
-                    {
+        /* Recorrer todos los monomios */
+        for (let i = 0; i < this.monomios.length; ++i) {
+            let jj = false;
+            let num_a_mult = 1;
+            /* Recorrer cada carácter del monomio individual dentro de la lista de monomios */
+            for (let j = 0; j < this.monomios[i].length; ++j) {
+                /* Bucle dedicado a detectar potencias para calcular */
+                for (let k = 0; k < this.monomios[i].length; ++k) {
+                    if (this.monomios[i][k] == '^') {
                         console.log("Potencia detectada");
-                        console.log(this.monomios[i][j]);
+                        console.log(`${this.monomios[i][k]}, i = ${i} | j = ${j}, k = ${k}`);
                         let buf_temp = "";
-                        for (let l = j; l < this.monomios[i].length; ++l)
-                        {
-                            if (!isNaN(Number(this.monomios[i][l])))
-                            {
+                        for (let l = k; l < this.monomios[i].length; ++l) {
+                            if (!isNaN(Number(this.monomios[i][l]))) {
                                 buf_temp += this.monomios[i][l];
                             }
                         }
-                        mult = Math.pow(mult, Number(buf_temp));
+                        mult = Math.pow(Number(this.returnValorDeVariable(this.monomios[i][k - 1])), Number(buf_temp));
                         console.log(`Mult después de la potencia: ${mult}`);
-                        if ((k + 2) < this.monomios[i].length)
-                        {
+                        if ((k + 2) < this.monomios[i].length) {
                             break;
-                        
-                        } else
-                        {
+
+                        } else {
                             k += 2;
                         }
                     }
                 }
 
-                if (j == 0)
-                {
-                    if (!isNaN(Number(this.monomios[i][j])))
-                    {
-                        console.log(this.monomios[i][j-1]);
-                        console.log(`Esto es un número: ${this.monomios[i][j]}`);
-                        mult *= Number(this.monomios[i][j]);
-                    
-                    } 
-                    
-                    else
-                    {
-                        let jj = false;
-                        if (this.monomios[i][j] == '-')
-                        {
+                if (!isNaN(Number(this.monomios[i][0]))) {
+                    console.log(`Número: ${this.monomios[i][j]}, i = ${i} | j = ${j}`);
+                    num_a_mult = this.monomios[i][0];
+                    console.log(num_a_mult);
+                    // mult *= Number(this.monomios[i][j]);
+
+                } else {
+                    if (!isNaN(Number(this.monomios[i][1]))) {
+                        num_a_mult = this.monomios[i][1];
+
+                    } else {
+                        console.log(`Variable: ${this.monomios[i][j]}, i = ${i} | j = ${j}`);
+                        if (this.monomios[i][0] == '-') {
                             jj = true;
-                        }
-                        console.log(`¡Ojo!, esto no es un número, se supone que es una variable: ${this.monomios[i][j]}`);
-                        for (let k = 0; k < this.valores.length; ++k)
-                        {
-                            if (this.valores[k].variable == this.monomios[i][j])
-                            {
-                                console.log(`${this.valores[k].variable} sustituido por ${this.valores[k].numero}`);
-                                mult *= Number(this.valores[k].numero);
-                                console.log(mult);
+                            if (this.monomios[i][2] != '^') {
+                                for (let k = 0; k < this.valores.length; ++k) {
+                                    if (this.valores[k].variable == this.monomios[i][j]) {
+                                        console.log(`${this.valores[k].variable} sustituido por ${this.valores[k].numero}`);
+                                        mult *= Number(this.valores[k].numero);
+                                        console.log(mult);
+                                        j++;
+
+                                    } else {
+                                        num_a_mult = this.monomios[i][j];
+                                        break;
+                                    }
+                                }
                             }
-                        }
 
-                        if (jj)
-                        {
-                            mult *= -mult;
-                            jj = false;
+                        } else {
+                            if (this.monomios[i][1] != '^') {
+                                for (let k = 0; k < this.valores.length; ++k) {
+                                    if (this.valores[k].variable == this.monomios[i][j]) {
+                                        console.log(`${this.valores[k].variable} sustituido por ${this.valores[k].numero}`);
+                                        mult *= Number(this.valores[k].numero);
+                                        console.log(mult);
+                                        j++;
 
+                                    } else {
+                                        num_a_mult = this.monomios[i][j];
+                                        break;
+                                    }
+                                }
+                            }
                         }
                     }
-                } else
-                {
-                    if (!isNaN(Number(this.monomios[i][j])) && (this.monomios[i][j-1] == '+' || this.monomios[i][j-1] == '-' || this.monomios[i][j-1] == '*'))
-                    {
-                        console.log(this.monomios[i][j-1]);
-                        console.log(`Esto es un número: ${this.monomios[i][j]}`);
-                        mult *= Number(this.monomios[i][j]);
-                    
-                    } 
-                    
-                    else
-                    {
-                        let jj = false;
-                        if (this.monomios[i][j] == '-')
-                        {
-                            jj = true;
-                        }
-                        console.log(`¡Ojo!, esto no es un número, se supone que es una variable: ${this.monomios[i][j]}`);
-                        for (let k = 0; k < this.valores.length; ++k)
-                        {
-                            if (this.valores[k].variable == this.monomios[i][j])
-                            {
-                                console.log(`${this.valores[k].variable} sustituido por ${this.valores[k].numero}`);
-                                mult *= Number(this.valores[k].numero);
-                                console.log(mult);
-                            }
-                        }
+                }
 
-                        if (jj)
-                        {
-                            mult *= -mult;
-                            jj = false;
-
+                if (this.monomios[i][j + 1] != '^') {
+                    if (this.monomios[i][j] == '-') {
+                        jj = true;
+                    }
+                    for (let k = 0; k < this.valores.length; ++k) {
+                        if (this.valores[k].variable == this.monomios[i][j + 1]) {
+                            console.log(`${this.valores[k].variable} sustituido por ${this.valores[k].numero}`);
+                            mult *= Number(this.valores[k].numero);
+                            console.log(mult);
                         }
                     }
                 }
             }
 
+
+            if (jj) {
+                console.log(`Num a multiplicar: ${num_a_mult}, con mult: ${mult} actual`);
+                mult *= num_a_mult;
+                console.log(`${mult}`);
+                mult = -mult;
+                jj = false;
+
+            } else {
+                console.log(`Num a multiplicar: ${num_a_mult}`);
+                mult *= num_a_mult;
+                num_a_mult = 1;
+            }
+
             this.resultados.push(mult);
+            console.log(this.resultados);
             mult = 1;
         }
 
         let sum = 0;
-        for (let i = 0; i < this.resultados.length; ++i)
-        {
+        for (let i = 0; i < this.resultados.length; ++i) {
             sum += this.resultados[i];
         }
 
@@ -243,5 +182,16 @@ export class Polinomios
         this.resultado_total_listo = true;
 
         console.log(this.resultados);
+    }
+
+    returnValorDeVariable(variable: string): any {
+        if (!isNaN(Number(variable))) {
+            return variable;
+        }
+        for (let i = 0; i < this.valores.length; ++i) {
+            if (this.valores[i].variable == variable) {
+                return this.valores[i].numero;
+            }
+        }
     }
 }

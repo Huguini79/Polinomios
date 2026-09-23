@@ -26,6 +26,7 @@ export class Lexer
 
     tokenize(code: any): any
     {
+        console.log("LEXER TRABAJANDO......");
         this.tokens = [];
         let buf = "";
         for (let i = 0; i < code.length; ++i)
@@ -62,7 +63,6 @@ export class Lexer
                         }
                     }
 
-                    console.log(buf_temp);
                     this.tokens.push({lex: buf_temp, type: TokenType.Potencia});
                 }
                 

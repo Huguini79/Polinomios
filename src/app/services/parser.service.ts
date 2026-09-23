@@ -20,13 +20,13 @@ export class Parser
     monomios: any = [];
     parse(tokens: any, numbers: any, grafo: any)
     {
+        console.log("PARSER TRABAJANDO..........");
         let buf = "";
         let j = 0;
         for (let i = 0; i < tokens.length; ++i)
         {
                 if (tokens[i].type != TokenType.Operation && tokens[i].lex != '')
                 {
-                    console.log(i);
                     buf += tokens[i].lex;
                 
                 }
@@ -61,6 +61,9 @@ export class Parser
         console.log(`Monomio identificado: ${buf}`);
         this.monomios.push(buf);
         buf = "";
+
+        console.log(`Monomios:`);
+        console.log(this.monomios);
     }
 
     returnMonomios(): any
