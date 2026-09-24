@@ -90,14 +90,37 @@ export class Polinomios {
                 }
 
                 if (!isNaN(Number(this.monomios[i][0]))) {
+                    let buf_temp = "";
                     console.log(`Número: ${this.monomios[i][j]}, i = ${i} | j = ${j}`);
-                    num_a_mult = this.monomios[i][0];
+                    for (let k = 0; k < this.monomios[i].length; ++k) {
+                        if (!isNaN(Number(this.monomios[i][k]))) {
+                            buf_temp += this.monomios[i][k];
+
+                        } else {
+                            break;
+                        }
+                    }
+
+                    num_a_mult = Number(buf_temp);
+                    buf_temp = "";
                     console.log(num_a_mult);
                     // mult *= Number(this.monomios[i][j]);
 
                 } else {
                     if (!isNaN(Number(this.monomios[i][1]))) {
-                        num_a_mult = this.monomios[i][1];
+                        let buf_temp = "";
+                        for (let k = 1; k < this.monomios[i].length; ++k) {
+                            if (!isNaN(Number(this.monomios[i][k]))) {
+                                buf_temp += this.monomios[i][k];
+
+                            } else {
+                                break;
+                            }
+                        }
+
+                        num_a_mult = Number(buf_temp);
+                        buf_temp = "";
+                        console.log(num_a_mult);
 
                     } else {
                         console.log(`Variable: ${this.monomios[i][j]}, i = ${i} | j = ${j}`);
