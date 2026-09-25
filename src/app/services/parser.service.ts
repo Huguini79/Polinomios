@@ -25,8 +25,10 @@ export class Parser
         let j = 0;
         for (let i = 0; i < tokens.length; ++i)
         {
-                if (tokens[i].type != TokenType.Operation && tokens[i].lex != '')
+                if (tokens[i].type != TokenType.Operation && tokens[i].lex != ' ' && tokens[i].lex != '')
                 {
+                    console.log(tokens[i].lex);
+                    console.log(tokens[i].lex.length);
                     buf += tokens[i].lex;
                 
                 }
